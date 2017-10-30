@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Random</title>
+        <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" media="screen" />        
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>                        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
+        <script src="Random.js"></script>        
+        <script src="Graph.js"></script>
+    </head>
+    <body>        
+        <script> 
+            function showHideErrors(rand)
+            {
+                var attrs = ['n', 'min', 'max'];
+                attrs.forEach(function(attr) {
+                    var block = $('#'+attr);
+                    var helpBlock = block.children('.help-block');                    
+                    var error = rand.getError(attr);
+                    if (error) {
+                        block.addClass('has-error');
+                        helpBlock.css('display', 'block');
+                        helpBlock.text(error);
+                    } else {
+                        block.removeClass('has-error');
+                        helpBlock.css('display', 'none');
+                        helpBlock.text('');                                 
+                    }                        
+                });
+            }
+            $(document).ready(function() {
+                var rand = new Random('3b44bfb9-b00d-49ff-934f-7c83841e35cd');                
+                var chart = new Graph('chart', rand);
+                $('#btn-rand').click(function(e) {
+                    e.preventDefault();
+                    rand.loadParams();
+                    if (rand.isValid()) {
+                        chart.show()
+                    }
+                    showHideErrors(rand);
+                });
+                
+            });
+        </script>                  
+        
+        <div class="container">
+            <h1>Random numbers</h1>
+            <form method="post">
+                <div id="n" class="form-group">
+                    <label>N:</label>
+                    <input class="form-control" name="Random[n]" value="5">
+                    <div class="help-block" style="display:none;"></div>
+                </div>
+                
+                <div id="min" class="form-group">
+                    <label>Min:</label>
+                    <input class="form-control" name="Random[min]" value="5">
+                    <div class="help-block" style="display:none;"></div>
+                </div>
+
+                <div id="max" class="form-group">
+                    <label>Max:</label>
+                    <input class="form-control" name="Random[max]" value="15">
+                    <div class="help-block" style="display:none;"></div>
+                </div>         
+                <button id="btn-rand" type="submit" class="btn btn-success">Get random numbers</button>
+            </form>
+            
+            <canvas id="chart"></canvas>
+                
+        </div>
+    </body>
+</html>
